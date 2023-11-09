@@ -1,0 +1,10 @@
+.card {
+  background-color: rgb(55, 52, 93);
+  display: flex;
+  justify-content: center;
+  color: azure;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
