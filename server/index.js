@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} disconnected.`);
   });
 
-  socket.N("approveOrReject", ({ userId, message }) => {
+  socket.on("approveOrReject", ({ userId, message }) => {
     const targetUserSocket = connectedUsers.get(userId);
 
     if (targetUserSocket) {
