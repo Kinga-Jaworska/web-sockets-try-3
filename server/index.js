@@ -17,18 +17,30 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  socket.on("join_room", (data) => {
-    console.log(`User connectedto ROOM ${data.room}`);
+const connectedUsers = new Map();
 
-    socket.join(data);
+io.on("connection", (socket) => {
+  console.log(`User ${socket.id} connected.`);
+
+  socket.on("login", (userId) => {
+    connectedUsers.set(userId, socket);
+    console.log(`User ${userId} logged in.`);
   });
 
-  socket.on("send_message", (data) => {
-    console.log(`User send message ${data.message} in room ${data.room}`);
+  socket.on("disconnect", () => {
+    const userId = Array.from(connectedUsers.keys()).find(
+      (key) => connectedUsers.get(key) === socket
+    );
+    connectedUsers.delete(userId);
+    console.log(`User ${userId} disconnected.`);
+  });
 
-    // socket.broadcast.emit("receive_message", data);
-    socket.to(data.room).emit("receive_message", data);
+  socket.N("approveOrReject", ({ userId, message }) => {
+    const targetUserSocket = connectedUsers.get(userId);
+
+    if (targetUserSocket) {
+      targetUserSocket.emit("notification", { message });
+    }
   });
 });
 

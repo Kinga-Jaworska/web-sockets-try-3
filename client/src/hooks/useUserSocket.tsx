@@ -7,18 +7,24 @@ const socket = io.connect("http://localhost:3003");
 export function useUserSocket() {
   const [notification, setNotification] = useState<{
     message: string;
-    type: MessageType | undefined;
-  }>({ message: "", type: undefined });
+    status: MessageType | undefined;
+  }>({ message: "", status: undefined });
 
   useEffect(() => {
-    socket.on("receive_message", ({ message, type }) => {
-      setNotification({ message, type });
+    socket.connect();
+
+    socket.on("notification", (notification) => {
+      setNotification(notification);
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [socket]);
 
-  const joinRoom = (room: number) => {
-    socket.emit("join_room", room);
+  const simulateLogIn = (userID: number) => {
+    socket.emit("login", userID);
   };
 
-  return { joinRoom, notification };
+  return { notification, simulateLogIn };
 }
