@@ -19,10 +19,11 @@ export function useManagerSocket() {
     };
   }, []);
 
-  const sendResponseToUser = (userID: number, type: MessageType) => {
+  const sendResponseToUser = (userID: number, status: MessageType) => {
     socket.emit("approveOrReject", {
       userId: userID,
-      message: getMessage(type),
+      message: getMessage(status),
+      status,
     });
   };
 

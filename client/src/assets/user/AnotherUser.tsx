@@ -2,17 +2,19 @@ import { Notification } from "../../components/notification/notification";
 import { useUserSocket } from "../../hooks/useUserSocket";
 
 export function AnotherUser() {
-  const { notification, simulateLogIn } = useUserSocket();
-
+  const { notifications, simulateLogIn } = useUserSocket();
   simulateLogIn(5);
 
   return (
     <div className="container">
-      User room 5
-      <Notification
-        message={notification?.message}
-        type={notification.status}
-      />
+      <div className="card"> User ID: 5</div>
+      {Array.isArray(notifications) ? (
+        notifications.map(({ message, status }) => (
+          <Notification key={message} message={message} type={status} />
+        ))
+      ) : (
+        <p>No new notifications</p>
+      )}
     </div>
   );
 }

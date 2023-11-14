@@ -4,27 +4,39 @@ import { MessageType } from "../types/request";
 
 const socket = io.connect("http://localhost:3003");
 
+// type UseUserSocketProps = {
+//   userID: number;
+// };
+
 export function useUserSocket() {
-  const [notification, setNotification] = useState<{
-    message: string;
-    status: MessageType | undefined;
-  }>({ message: "", status: undefined });
-
-  useEffect(() => {
-    socket.connect();
-
-    socket.on("notification", (notification) => {
-      setNotification(notification);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
+  const [notifications, setNotifications] = useState<
+    {
+      message: string;
+      status: MessageType | undefined;
+    }[]
+  >([{ message: "", status: undefined }]);
 
   const simulateLogIn = (userID: number) => {
     socket.emit("login", userID);
   };
 
-  return { notification, simulateLogIn };
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    if (!socket.hasListeners("notification")) {
+      socket.on("notification", (notification) => {
+        setNotifications((prev) => [...prev, notification]);
+      });
+    }
+
+    return () => {
+      if (!socket.hasListeners("notification")) {
+        socket.disconnect();
+      }
+    };
+  }, []);
+
+  return { notifications, simulateLogIn };
 }

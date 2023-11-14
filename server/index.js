@@ -35,12 +35,18 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} disconnected.`);
   });
 
-  socket.on("approveOrReject", ({ userId, message }) => {
+  // PER USER SOCKET
+  socket.on("approveOrReject", ({ userId, message, status }) => {
     const targetUserSocket = connectedUsers.get(userId);
 
     if (targetUserSocket) {
-      targetUserSocket.emit("notification", { message });
+      targetUserSocket.emit("notification", { message, status });
     }
+  });
+
+  // BROADCAST
+  socket.emit("notification", {
+    message: "It's end of month you should fill forms",
   });
 });
 
