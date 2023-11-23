@@ -21,7 +21,7 @@ export function TeamList({ data, onClick }: ListPanelProps) {
             <CustomButton
               onClick={() => onClick(name)}
               icon={sendIcon}
-              variant="primary"
+              // variant="primary"
             >
               Send notification to all team members
             </CustomButton>
