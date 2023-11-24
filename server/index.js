@@ -47,6 +47,7 @@ io.on("connection", (socket) => {
   // BROADCAST
   socket.emit("notification", {
     message: "It's end of month you should fill forms",
+    status: "info",
   });
 });
 

@@ -12,6 +12,18 @@
   background-color: rgb(153, 18, 45);
 }
 
+.info {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgb(68, 136, 191);
+}
+
+.info-icon {
+  padding: 5px;
+  border-radius: 20px;
+  background-color: rgb(40, 47, 53);
+}
+
 @keyframes wiggle {
   0%,
   7% {

@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import * as io from "socket.io-client";
-import { MessageType } from "../types/request";
+import { Notification } from "../mock/notification";
 
 const socket = io.connect("http://localhost:3003");
 
-// type UseUserSocketProps = {
-//   userID: number;
-// };
+type UseUserSocketProps = {
+  userID: number;
+};
 
-export function useUserSocket() {
-  const [notifications, setNotifications] = useState<
-    {
-      message: string;
-      status: MessageType | undefined;
-    }[]
-  >([{ message: "", status: undefined }]);
+export function useUserSocket({ userID }: UseUserSocketProps) {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const simulateLogIn = (userID: number) => {
+  const simulateLogIn = () => {
     socket.emit("login", userID);
+  };
+
+  const handleNotification = (notification: Notification) => {
+    setNotifications((prev) => [...prev, notification]);
   };
 
   useEffect(() => {
@@ -26,17 +25,18 @@ export function useUserSocket() {
     }
 
     if (!socket.hasListeners("notification")) {
-      socket.on("notification", (notification) => {
-        setNotifications((prev) => [...prev, notification]);
-      });
+      socket.on("notification", handleNotification);
     }
 
-    return () => {
-      if (!socket.hasListeners("notification")) {
-        socket.disconnect();
-      }
-    };
-  }, []);
+    simulateLogIn();
 
-  return { notifications, simulateLogIn };
+    return () => {
+      if (socket.hasListeners("notification")) {
+        socket.off("notification", handleNotification);
+      }
+      socket.disconnect();
+    };
+  }, [userID]);
+
+  return { notifications };
 }
