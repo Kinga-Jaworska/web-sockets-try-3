@@ -8,5 +8,10 @@ export type NotifcationProps = {
 };
 
 export function Notification({ message, type }: NotifcationProps) {
-  return <div className={clsx(type)}>{message}</div>;
+  return (
+    <div className={clsx(type)}>
+      {type === "info" && <div className="info-icon">ℹ</div>}
+      {message}
+    </div>
+  );
 }
