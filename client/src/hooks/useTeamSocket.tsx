@@ -7,7 +7,7 @@ type UseTeamSocketProps = {
 };
 
 export function useTeamSocket({ teamName }: UseTeamSocketProps) {
-  const socket = io.connect(`http://localhost:3003/${teamName}`); // ENV
+  const socket = io.connect(`http://localhost:3003/${teamName}`);
 
   const handleNotification = (notification: Notification) => {
     alert(notification.message);
@@ -19,11 +19,7 @@ export function useTeamSocket({ teamName }: UseTeamSocketProps) {
     }
 
     return () => {
-      // Cleanup function to remove the event listener
       socket.off("namespaceNotification", handleNotification);
-      // socket.disconnect();
     };
   }, [teamName]);
-
-  // return {};
 }
