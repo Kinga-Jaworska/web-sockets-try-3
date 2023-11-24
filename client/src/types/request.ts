@@ -4,4 +4,4 @@ export type Request = {
   userID: number;
 };
 
-export type MessageType = "reject" | "approve";
+export type MessageType = "reject" | "approve" | "info";

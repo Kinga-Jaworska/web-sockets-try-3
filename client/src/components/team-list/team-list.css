@@ -1,0 +1,8 @@
+.team-group {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(55, 31, 88);
+}
+.team-panel {
+  padding: 30px;
+}

@@ -24,6 +24,16 @@
   color: white;
 }
 
+.App-bar {
+  display: flex;
+  align-content: center;
+  margin: 10px;
+  justify-content: space-between;
+  background-color: rgb(48, 59, 59);
+  color: #ced1d6;
+  width: 100%;
+}
+
 .App-link {
   color: #61dafb;
 }
