@@ -51,6 +51,21 @@ io.on("connection", (socket) => {
   });
 });
 
+// NAMESPACES
+io.of("/couchbase").on("connection", (socket) => {
+  console.log("COUCHBASE");
+  socket.emit("namespaceNotification", { message: "Hello in Couchbase!" });
+});
+
+io.of("/learnCodingAcademy").on("connection", (socket) => {
+  console.log("learnCodingAcademy");
+  socket.emit("namespaceNotification", {
+    message: "Hello in Learn Coding Academy!",
+  });
+});
+
+const emitNamespaceNotification = () => {};
+
 server.listen(3003, () => {
   console.log("SERVER IS RUNNING");
 });

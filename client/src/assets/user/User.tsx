@@ -7,6 +7,7 @@ export function User() {
   return (
     <div className="container">
       <div className="card"> User ID: 12</div>
+
       {Array.isArray(notifications) ? (
         notifications.map(({ message, status }) => (
           <Notification key={message} message={message} type={status} />
