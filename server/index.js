@@ -52,19 +52,27 @@ io.on("connection", (socket) => {
 });
 
 // NAMESPACES
-io.of("/couchbase").on("connection", (socket) => {
-  console.log("COUCHBASE");
-  socket.emit("namespaceNotification", { message: "Hello in Couchbase!" });
-});
+const emitNamespaceNotification = (socket, message) => {
+  socket.emit("namespaceNotification", { message });
+};
 
-io.of("/learnCodingAcademy").on("connection", (socket) => {
-  console.log("learnCodingAcademy");
-  socket.emit("namespaceNotification", {
-    message: "Hello in Learn Coding Academy!",
+io.of("/couchbase").on("connection", (socket) => {
+  emitNamespaceNotification(socket, "Hello in Couchbase!");
+
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room ${room}`);
+  });
+
+  socket.on("roomMessage", ({ room, message }) => {
+    console.log("room", room, "message", message);
+    io.of("/couchbase").to(room).emit("roomMessage", message);
   });
 });
 
-const emitNamespaceNotification = () => {};
+io.of("/learnCodingAcademy").on("connection", (socket) =>
+  emitNamespaceNotification(socket, "Hello in Learn Coding Academy!")
+);
 
 server.listen(3003, () => {
   console.log("SERVER IS RUNNING");
