@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import * as io from "socket.io-client";
+import { Room } from "../types/team";
 
 type UseTeamSocketProps = {
   teamName: string;
@@ -7,6 +8,7 @@ type UseTeamSocketProps = {
 
 export function useTeamSocket({ teamName }: UseTeamSocketProps) {
   const [notifications, setNotifications] = useState<string[]>([]);
+  const [room, setRoom] = useState<Room>();
 
   const socket = io.connect(`http://localhost:3003/${teamName}`);
 
@@ -14,29 +16,37 @@ export function useTeamSocket({ teamName }: UseTeamSocketProps) {
     setNotifications((prev) => [...prev, message]);
   };
 
+  const sendRoomNotification = (room: Room, message: string) => {
+    socket.emit("roomMessage", { room, message });
+  };
+
   useEffect(() => {
-    // if (!socket.hasListeners("namespaceNotification")) {
-    //   // socket.on("namespaceNotification", handleNotification);
-    // }
-    socket.on("roomMessage", handleNotification);
+    if (!socket.hasListeners("namespaceNotification")) {
+      socket.on("namespaceNotification", ({ message }) => alert(message));
+    }
 
-    // if (!socket.hasListeners("roomMessage")) {
-    // socket.on("roomMessage", handleNotification);
-    // socket.emit("roomMessage", { room: "be", message: "Hello Backend Room!" });
-
-    // Send a message to the room
-    // }
+    if (!socket.hasListeners("roomMessage")) {
+      socket.on("roomMessage", handleNotification);
+    }
 
     return () => {
       socket.off("namespaceNotification", handleNotification);
     };
   }, [teamName]);
 
-  const joinRoom = (room: string) => {
+  const joinRoom = (room: Room) => {
+    // join room
     socket.emit("joinRoom", room);
-    socket.emit("roomMessage", { room, message: "Hello Backend Room!" });
-    // socket.emit("joinRoom", "be"); // Room name can be dynamic or based on user roles
+    setRoom(room);
+
+    // emit event to other users in room
+    // make it by input - little chat
+    // to testing purposes:
+    if (room === "be") sendRoomNotification(room, "Hello Backend Room!");
+    else sendRoomNotification(room, "Hello Frontend Room!");
   };
 
-  return { notifications, joinRoom };
+  const leftRoom = () => {}; // ?
+
+  return { notifications, room, joinRoom, sendRoomNotification };
 }

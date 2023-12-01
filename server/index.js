@@ -59,6 +59,7 @@ const emitNamespaceNotification = (socket, message) => {
 io.of("/couchbase").on("connection", (socket) => {
   emitNamespaceNotification(socket, "Hello in Couchbase!");
 
+  // ROOMS
   socket.on("joinRoom", (room) => {
     socket.join(room);
     console.log(`User ${socket.id} joined room ${room}`);
