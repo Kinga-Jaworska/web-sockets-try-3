@@ -26,7 +26,8 @@
 
 .App-bar {
   display: flex;
-  align-content: center;
+  position: absolute;
+  top: 0;
   margin: 10px;
   justify-content: space-between;
   background-color: rgb(48, 59, 59);
