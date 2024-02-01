@@ -6,17 +6,24 @@ type UseTeamSocketProps = {
   teamName: string;
 };
 
+type Notification = {
+  message: string;
+  isRecived?: boolean;
+};
+
 export function useTeamSocket({ teamName }: UseTeamSocketProps) {
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [room, setRoom] = useState<Room>();
 
   const socket = io.connect(`http://localhost:3003/${teamName}`);
 
-  const handleNotification = (message: string) => {
-    setNotifications((prev) => [...prev, message]);
+  const handleNotification = ({ message }: Notification) => {
+    // console.log("handleNotification", notification.message, notification.isRecived);
+    setNotifications((prev) => [...prev, { message }]);
   };
 
   const sendRoomNotification = (room: Room, message: string) => {
+    // send Room Message
     socket.emit("roomMessage", { room, message });
   };
 
@@ -26,6 +33,7 @@ export function useTeamSocket({ teamName }: UseTeamSocketProps) {
     }
 
     if (!socket.hasListeners("roomMessage")) {
+      // get Room Message
       socket.on("roomMessage", handleNotification);
     }
 
@@ -39,11 +47,8 @@ export function useTeamSocket({ teamName }: UseTeamSocketProps) {
     socket.emit("joinRoom", room);
     setRoom(room);
 
-    // emit event to other users in room
-    // make it by input - little chat
-    // to testing purposes:
-    if (room === "be") sendRoomNotification(room, "Hello Backend Room!");
-    else sendRoomNotification(room, "Hello Frontend Room!");
+    // if (room === "be") sendRoomNotification(room, "Hello Backend Room!");
+    // else sendRoomNotification(room, "Hello Frontend Room!");
   };
 
   const leftRoom = () => {}; // ?

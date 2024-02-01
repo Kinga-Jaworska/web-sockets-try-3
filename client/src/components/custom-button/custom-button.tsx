@@ -6,7 +6,7 @@ type CustomButtonProps = {
   icon?: string;
   children?: ReactNode;
   type?: "button" | "submit" | "reset";
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export function CustomButton({
